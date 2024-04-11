@@ -18,12 +18,12 @@ dp = Dispatcher()
 async def main() -> None:
     dp = Dispatcher()
     dp.include_router(main_router)
-
-    logging.basicConfig(level=logging.INFO)
     bot = Bot(
-        token=TOKEN,
-        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-    )
+            token=TOKEN,
+            default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+        )
+    logging.basicConfig(level=logging.INFO)
+    
     await dp.start_polling(bot)
 
 
