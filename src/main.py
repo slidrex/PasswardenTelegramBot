@@ -13,7 +13,7 @@ load_dotenv()
 TOKEN = getenv("BOT_TOKEN")
 
 dp = Dispatcher()
-
+from middleware.auth_middleware import AuthorizationMiddleware
 
 async def main() -> None:
     dp = Dispatcher()
@@ -23,7 +23,8 @@ async def main() -> None:
             default=DefaultBotProperties(parse_mode=ParseMode.HTML)
         )
     logging.basicConfig(level=logging.INFO)
-    
+    dp.message.middleware(AuthorizationMiddleware())
+
     await dp.start_polling(bot)
 
 

@@ -9,7 +9,6 @@ from aiogram_dialog.widgets.kbd import Checkbox, ManagedCheckbox
 from aiogram_dialog.widgets.text import Const
 from aiogram_dialog import DialogManager, ChatEvent
 
-from decorators.auth import auth_required
 
 rt = Router(name=__name__)
 
@@ -23,7 +22,6 @@ async def check_changed(event: ChatEvent, checkbox: ManagedCheckbox,
     print("Check status changed:", checkbox.is_checked())
 
 @rt.message(AddPassword.input_name)
-@auth_required
 async def input_name_async(message: Message, state: FSMContext):
     
     await message.answer(text=f'Введите логин')
@@ -31,7 +29,6 @@ async def input_name_async(message: Message, state: FSMContext):
     await state.set_state(AddPassword.input_login)
 
 @rt.message(AddPassword.input_login)
-@auth_required
 async def input_login_async(message: Message, state: FSMContext):
     
     
@@ -49,14 +46,12 @@ async def input_login_async(message: Message, state: FSMContext):
     await state.set_state(AddPassword.input_pass)
 
 @rt.message(AddPassword.input_pass)
-@auth_required
 async def input_pass_async(message: Message, state: FSMContext):
     await state.update_data(input_pass=message.text)
     data = await state.get_data()
     await message.answer(text=[data["input_name"], data["input_login"],data["input_pass"]])
 
 @rt.callback_query(F.data == "generate_pass")
-@auth_required
 async def input_pass_async(callback_query: CallbackQuery, state: FSMContext):
     builder = InlineKeyboardBuilder()
     
