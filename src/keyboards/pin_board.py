@@ -41,7 +41,7 @@ async def view_pass_handler(callback: CallbackQuery):
         await callback.message.edit_text(text=ENTER_PIN_MESSAGE,reply_markup=markup)
     
     if field_text[0].isdigit():
-        if len_of_field_text < 6:
+        if len_of_field_text < 4:
             await callback.message.edit_text(text=field_text + postfix_message, reply_markup=markup)
     else:
         await callback.message.edit_text(text=postfix_message, reply_markup=markup)

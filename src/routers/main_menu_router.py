@@ -6,27 +6,37 @@ from aiogram import F
 
 from .settings_router import rt as settings_rt
 from .settings_router import (
-    get_settings_layout
+SettingsState
 )
-from aiogram.filters.state import StatesGroup, State
+
 from aiogram.fsm.context import FSMContext
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from .add_password_router import rt as add_pass_router
 
 from .add_password_router import (
-    AddPassword
+    PasswordDialog
 )
+
 from middleware.auth_middleware import rt as auth_rt
+from .add_password_router import PasswordDialog
+
+
+from aiogram_dialog import (
+    Dialog, DialogManager, StartMode
+)
 
 
 
-SOURCE_CODE_BOT_URI = "https://github.com/slidrex/passwarden-bot" 
+
+SOURCE_CODE_BOT_URI = "https://github.com/slidrex/passwarden-bot"
+
 
 from keyboards.main_keyboard import (
     get_main_markup,
     ButtonText
 )
+
 
 rt = Router(name=__name__)
 rt.include_router(settings_rt)
@@ -47,20 +57,21 @@ async def about_handler(message: Message) -> None:
     await message.answer(text= about.MESSAGE, reply_markup=builder.as_markup())
 
 @rt.message(F.text == ButtonText.CREATE_PASS)
-async def create_pass_handler(message: Message, state: FSMContext) -> None:
-    await message.answer(text="Введите название пароля (чтобы знать от чего пароль)")
-    await state.set_state(AddPassword.input_name)
+@flags.authorization()
+async def create_pass_handler(message: Message, state: FSMContext, dialog_manager: DialogManager) -> None:
+    await dialog_manager.start(PasswordDialog.pass_gen_menu, mode=StartMode.RESET_STACK)
 
 
 
 @rt.message(F.text == ButtonText.VIEW_PASS)
-@flags.authorization(is_authorized=True)
+@flags.authorization()
 async def view_pass_handler(message: Message) -> None:
     await message.answer(text= about.MESSAGE)
 
 
 @rt.message(F.text == ButtonText.SETTINGS)
-@flags.authorization(is_authorized=False)
-async def settings_handler(message: Message) -> None:
+@flags.authorization()
+async def settings_handler(message: Message, state: FSMContext, dialog_manager: DialogManager) -> None:
 
-    await message.answer(text= "Настройки:", reply_markup=get_settings_layout(has_pin=True).as_markup())
+    await dialog_manager.start(SettingsState.SEETINGS_DIALOG)
+
