@@ -1,18 +1,19 @@
 from aiogram import Router , flags
 from aiogram.filters import CommandStart
 from aiogram.types import Message
-from html_messages import start, about
+
 from aiogram import F
 
 from .settings_router import rt as settings_rt
 from .settings_router import (
 SettingsState
 )
-
+from html_messages import about
 from aiogram.fsm.context import FSMContext
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from .add_password_router import rt as add_pass_router
+from .view_pass_router import rt as view_pass_router
 
 from .add_password_router import (
     PasswordDialog
@@ -20,7 +21,7 @@ from .add_password_router import (
 
 from middleware.auth_middleware import rt as auth_rt
 from .add_password_router import PasswordDialog
-
+from .view_pass_router import ViewPassStates
 
 from aiogram_dialog import (
     Dialog, DialogManager, StartMode
@@ -39,6 +40,8 @@ from keyboards.main_keyboard import (
 
 
 rt = Router(name=__name__)
+
+rt.include_router(view_pass_router)
 rt.include_router(settings_rt)
 rt.include_router(add_pass_router)
 rt.include_router(auth_rt)
@@ -59,14 +62,16 @@ async def about_handler(message: Message) -> None:
 @rt.message(F.text == ButtonText.CREATE_PASS)
 @flags.authorization()
 async def create_pass_handler(message: Message, state: FSMContext, dialog_manager: DialogManager) -> None:
-    await dialog_manager.start(PasswordDialog.pass_gen_menu, mode=StartMode.RESET_STACK)
+    await dialog_manager.start(PasswordDialog.ask_pass_name, mode=StartMode.RESET_STACK,
+                               data={"password_length":16,
+                                     "include_symbols": False})
 
 
 
 @rt.message(F.text == ButtonText.VIEW_PASS)
 @flags.authorization()
-async def view_pass_handler(message: Message) -> None:
-    await message.answer(text= about.MESSAGE)
+async def view_pass_handler(message: Message, state: FSMContext, dialog_manager: DialogManager) -> None:
+    await dialog_manager.start(ViewPassStates.select_pass, mode=StartMode.RESET_STACK)
 
 
 @rt.message(F.text == ButtonText.SETTINGS)
