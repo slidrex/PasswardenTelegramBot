@@ -9,18 +9,24 @@ from routers import router as main_router
 from aiogram.client.default import DefaultBotProperties
 from aiogram_dialog import setup_dialogs
 from logging_master.logging_manager import init_logging_bot
+from aiogram import flags
+
 load_dotenv()
 
 TOKEN = getenv("BOT_TOKEN")
 
-dp = Dispatcher()
 from middleware.auth_middleware import AuthorizationMiddleware
 
 async def main() -> None:
     dp = Dispatcher()
     dp.include_router(main_router)
+    
+    dp.callback_query.middleware(AuthorizationMiddleware())
+    
+   # dp.message.middleware(AuthorizationMiddleware())
+    
     setup_dialogs(dp)
-
+    
 
     bot = Bot(
             token=TOKEN,
@@ -29,8 +35,6 @@ async def main() -> None:
     logging.basicConfig(level=logging.INFO)
 
     init_logging_bot(bot)
-
-    dp.message.middleware(AuthorizationMiddleware())
     await dp.start_polling(bot)
 
 

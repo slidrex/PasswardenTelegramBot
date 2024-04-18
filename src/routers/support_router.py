@@ -1,7 +1,6 @@
 from aiogram import Router
 from aiogram.types import Message, CallbackQuery
 from aiogram import F
-from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.filters.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from typing import Any, Dict
@@ -9,9 +8,9 @@ from aiogram_dialog.widgets.input import TextInput
 from aiogram_dialog.widgets.kbd import Button
 from aiogram_dialog import Window, Dialog, DialogManager
 from aiogram_dialog.widgets.text import Const, Format
-from aiogram_dialog.widgets.kbd import Cancel, Row, Back
+from aiogram_dialog.widgets.kbd import Cancel
 from logging_master.api.base_inputs import log_support_response, write_support_message
-from logging_master.logging_manager import LOG_CHANNEL, ADMIN_ID, log_to_user
+from logging_master.logging_manager import ADMIN_ID
 
 rt = Router()
 

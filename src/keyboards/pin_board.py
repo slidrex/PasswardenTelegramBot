@@ -3,6 +3,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import Message
 from aiogram.types import CallbackQuery
 from aiogram import F
+from aiogram import flags
 
 rt = Router()
 
@@ -30,8 +31,8 @@ def get_pin_markup():
 
 markup = get_pin_markup()
 
-
 @rt.callback_query(F.data.startswith(PIN_BOARD_PREFIX))
+@flags.authorization(is_authorized=True)
 async def view_pass_handler(callback: CallbackQuery):
     postfix_message = callback.data[callback.data.index("_") + 1:]
     field_text = str(callback.message.text)

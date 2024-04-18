@@ -129,10 +129,11 @@ def get_change_pass_len_window():
     )
 
 
-    
 
 async def on_pass_name_enterred(message: Message, widget: Any, manager: DialogManager, data: str):
+    
     manager.dialog_data.update(entered_pass_name= data)
+    
     await manager.switch_to(PasswordDialog.ask_pass_login)
 
 

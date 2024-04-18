@@ -7,6 +7,7 @@ from aiogram.types import Message, TelegramObject
 from aiogram.types import Message
 from keyboards.pin_board import markup
 from keyboards.pin_board import rt as pin_router
+from aiogram import flags
 from aiogram.types import CallbackQuery
 from aiogram import Router
 from aiogram import F
@@ -49,24 +50,31 @@ class AuthorizationMiddleware(BaseMiddleware):
 
         authorization = get_flag(data, "authorization")
         
-        if authorization is not None:
-            
-            if is_authorized == False:
-                    if instance_of == InstanceType.Callback:
+        if is_authorized == False and not (authorization is not None and authorization.get("is_authorized") != None and authorization["is_authorized"] == True):
+                
+                if instance_of == InstanceType.Callback:
 
-                        return await event.message.answer(text="Not authenticated", reply_markup=markup)
-                    else:
-                        return await event.answer(text="Not authenticated", reply_markup=markup)
-            else:
-                return await handler(event, data)
+                    return await event.message.answer(text="Not authenticated", reply_markup=markup)
+                else:
+                    return await event.answer(text="Not authenticated", reply_markup=markup)
         else:
             return await handler(event, data)
+        
 
+@rt.message(F.text == "lock")
+@flags.authorization(is_authorized=True)
+async def lock_auth(callback: CallbackQuery):
+    global is_authorized
+    is_authorized = False
 
-
-
+@rt.message(F.text == "unlock")
+@flags.authorization(is_authorized=True)
+async def unlock_auth(callback: CallbackQuery):
+    global is_authorized
+    is_authorized = True
 
 @rt.callback_query(F.data == "enter_pin")
+@flags.authorization(is_authorized=True)
 async def validate_pin(callback: CallbackQuery):
     global is_authorized
     pin = callback.message.text
