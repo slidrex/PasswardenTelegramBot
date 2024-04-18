@@ -7,9 +7,7 @@ from aiogram.filters.state import StatesGroup, State
 from aiogram_dialog.widgets.text import Const
 from aiogram_dialog.widgets.kbd import SwitchTo
 from aiogram import Router
-from .settings_states import SettingsState
-
-rt = Router()
+from dialog_states.settings_states import SettingsState
 
 def get_delete_data_window():
     return Window(

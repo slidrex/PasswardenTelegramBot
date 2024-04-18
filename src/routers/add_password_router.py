@@ -1,16 +1,11 @@
-from aiogram import Router , flags
 from aiogram.types import Message
 from aiogram import F
-from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import CallbackQuery
-from aiogram.filters.state import StatesGroup, State
-from aiogram.fsm.context import FSMContext
+
 from aiogram_dialog.widgets.kbd import Checkbox, ManagedCheckbox
 from aiogram_dialog.widgets.text import Const
 
 from aiogram_dialog import DialogManager, ChatEvent
-
-from aiogram.filters.callback_data import CallbackData
 
 import random
 
@@ -18,14 +13,15 @@ import random
 from typing import Any
 
 
-from aiogram_dialog.widgets.input import TextInput, MessageInput
+from aiogram_dialog.widgets.input import TextInput
 
 
 from aiogram_dialog.widgets.kbd import Button, SwitchTo
 
 from aiogram_dialog.widgets.text import Const, Format
-
+from dialog_states.pass_add_dialog_state import PasswordDialog
 from aiogram_dialog.widgets.kbd import Cancel, Row, Back, Next
+from aiogram import Router
 
 from aiogram_dialog import (
     Dialog, DialogManager, StartMode, Window,
@@ -34,18 +30,7 @@ from aiogram_dialog import (
 rt = Router(name=__name__)
 
 
-class PasswordDialog(StatesGroup):
-    ask_pass_name = State()
-    ask_pass_login = State()
-    ask_pass_gen_way = State()
-    ask_pass_password = State()
-    pass_gen_menu = State()
-    choose_passlen_win = State()
-    confirm_pass_data = State()
-    pass_data_confirmed = State()
 
-    edit_name = State()
-    edit_login = State()
 
 def get_pass(include_symbols: bool, length: int) -> str:
     return "`password `" + str(length) + " " + str(random.randint(1, 9)) + ("###" if include_symbols else "")

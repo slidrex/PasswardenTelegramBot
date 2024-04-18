@@ -5,7 +5,7 @@ from aiogram.types import Message
 from aiogram import F
 
 from .settings_router import rt as settings_rt
-from .settings_router import (
+from dialog_states.settings_states import (
 SettingsState
 )
 from html_messages import about
@@ -33,7 +33,7 @@ from aiogram_dialog import (
 SOURCE_CODE_BOT_URI = "https://github.com/slidrex/passwarden-bot"
 
 
-from keyboards.main_keyboard import (
+from windows.main_menu_window import (
     get_main_markup,
     ButtonText
 )

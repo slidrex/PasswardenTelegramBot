@@ -16,7 +16,7 @@ rt = Router()
 
 class SupportState(StatesGroup):
     ADMIN_DIALOG = State()
-    SUPPORT_DIALOG = State()
+    
     ENTER_SUPPORT_ANSWER = State()
     SUPPORT_RESPONSE_DIALOG = State()
     
@@ -24,24 +24,11 @@ class SupportState(StatesGroup):
     RESPONSE_CONFIRM_INFO = State()
     
 
-def get_support_layout():
 
-    return Window(
-        Const('Напишите текст обращения к президенту: '),
-        TextInput(id="support_write", on_success=on_support_written),
-        Cancel(Const('Назад')),
-        
-
-        state=SupportState.SUPPORT_DIALOG
-    )
 async def on_support_write_click(callback: CallbackQuery, button: Button,
                      manager: DialogManager):
     await manager.start(SupportState.SUPPORT_DIALOG)
 
-async def on_support_written(message: Message, widget: Any, manager: DialogManager, data: str):
-    await log_support_response(message.from_user.id, message.from_user.username, message.chat.id, message.text)
-    await message.answer(text="Ваше обращение отправлено! Вам может быть ответят в течение этого года.")
-    await manager.start(SupportState.SEETINGS_DIALOG)
 
 def get_support_message_window():
     return Window(
@@ -119,4 +106,4 @@ async def on_support_response_enterred(message: Message, widget: Any, manager: D
 
 
 
-rt.include_router(Dialog(get_admin_dialog_window(), get_support_layout(), get_support_message_window(), get_support_text_window(), get_response_confirm_window()))
+rt.include_router(Dialog(get_admin_dialog_window(), get_support_message_window(), get_support_text_window(), get_response_confirm_window()))

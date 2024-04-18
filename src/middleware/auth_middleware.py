@@ -5,8 +5,8 @@ from aiogram import BaseMiddleware
 from aiogram.dispatcher.flags import get_flag
 from aiogram.types import Message, TelegramObject
 from aiogram.types import Message
-from keyboards.pin_board import markup
-from keyboards.pin_board import rt as pin_router
+from auth.pin_board import markup
+from auth.pin_board import rt as pin_router
 from aiogram import flags
 from aiogram.types import CallbackQuery
 from aiogram import Router
