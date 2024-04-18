@@ -1,10 +1,9 @@
-from aiogram_dialog.widgets.kbd import Button
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.text import Const
 from aiogram_dialog.widgets.input import TextInput
-from aiogram_dialog.widgets.kbd import SwitchTo, Cancel
+from aiogram_dialog.widgets.kbd import Cancel
 from dialog_states.settings_states import SettingsState
-from getters.user_support_getter import on_support_written
+from windows_services.user_support_getter import on_support_written
 
 def get_support_layout():
 
