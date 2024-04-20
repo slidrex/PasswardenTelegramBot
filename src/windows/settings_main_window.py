@@ -12,9 +12,9 @@ def get_settings_layout():
         SwitchTo(Const('Написать в поддержку'), id="write_support", state=SettingsState.SUPPORT_DIALOG),
         SwitchTo(Const('Удалить данные'), id="delete_data", state=SettingsState.DeleteData),
 
-        Button(Const('Удалить PIN'), id="write_support", when=is_has_pin),
-        Button(Const('Изменить PIN'), id="write_support", when=is_has_pin),
+        #Button(Const('Удалить PIN'), id="write_support", when=is_has_pin),
+        #Button(Const('Изменить PIN'), id="write_support", when=is_has_pin),
 
-        Button(Const('Добавить PIN'), id="write_support", when=has_no_pin),
+        #Button(Const('Добавить PIN'), id="write_support", when=has_no_pin),
         state=SettingsState.SEETINGS_DIALOG
     )

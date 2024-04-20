@@ -21,7 +21,7 @@ async def main() -> None:
     dp = Dispatcher()
     dp.include_router(main_router)
     
-    dp.callback_query.middleware(AuthorizationMiddleware())
+    #dp.callback_query.middleware(AuthorizationMiddleware())
     
    # dp.message.middleware(AuthorizationMiddleware())
     
