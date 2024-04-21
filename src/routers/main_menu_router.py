@@ -25,7 +25,7 @@ from aiogram_dialog import (
 
 
 
-
+SOURCE_CODE_API_URI = "https://github.com/slidrex/passwarden-server"
 SOURCE_CODE_BOT_URI = "https://github.com/slidrex/passwarden-bot"
 
 
@@ -52,6 +52,7 @@ async def command_start_handler(message: Message) -> None:
 async def about_handler(message: Message) -> None:
 
     builder = InlineKeyboardBuilder()
+    builder.button(text="Github (API)", url=SOURCE_CODE_API_URI)
     builder.button(text="Github (Bot)", url=SOURCE_CODE_BOT_URI)
     
     await message.answer(text= about.MESSAGE, reply_markup=builder.as_markup())
