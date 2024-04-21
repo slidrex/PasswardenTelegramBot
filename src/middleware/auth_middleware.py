@@ -49,8 +49,8 @@ class AuthorizationMiddleware(BaseMiddleware):
             return await handler(event, data)
 
         authorization = get_flag(data, "authorization")
-        
-        if False#is_authorized == False and not (authorization is not None and authorization.get("is_authorized") != None and authorization["is_authorized"] == True):
+        #is_authorized == False and not (authorization is not None and authorization.get("is_authorized") != None and authorization["is_authorized"] == True):
+        if False:
                 
                 if instance_of == InstanceType.Callback:
 
