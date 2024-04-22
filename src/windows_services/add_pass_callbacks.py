@@ -6,22 +6,41 @@ from aiogram_dialog.widgets.kbd import Button
 import random
 from typing import Any
 from dialog_states.pass_add_dialog_state import PasswordDialog
+from core.services.pass_generate_service import generate_pass
+from core.services.pass_security_check_service import get_security_report
 
 def get_pass(include_symbols: bool, length: int) -> str:
-    return "`password `" + str(length) + " " + str(random.randint(1, 9)) + ("###" if include_symbols else "")
+    return generate_pass(length, include_symbols)
+
+
+
 
 async def pass_get_data(dialog_manager: DialogManager,  **kwargs):
     ctx = dialog_manager.current_context()
     
     include_symbols = ctx.dialog_data.get("include_symbols")
-    passw = get_pass(include_symbols, ctx.dialog_data.get("password_length"))
+    data = ctx.dialog_data.get("password_length")
+    if data == None:
+        ctx.dialog_data.update(password_length=16)
+        data = 16
+    passw = get_pass(include_symbols, data).replace('`', '\\`').replace('}', '\\}')
+    
     
     ctx.dialog_data.update(entered_pass_password=passw)
-
+    
     return {
         "pwd": passw,
     }
 
+async def get_password_security_report(dialog_manager: DialogManager,  **kwargs):
+    ctx = dialog_manager.current_context()
+
+    pwd = ctx.dialog_data.get("entered_pass_password")
+    report = get_security_report(pwd)
+
+    leak_message = f"Ваш пароль был найден в {report.leaked_count} утечках баз данных" if report.leaked_count > 0 else f"Пароль не был найден в утечках"
+
+    return {"entropy": int(report.entropy), "leak" : leak_message, "leak_status" : report.status}
 
 
 async def check_changed(event: ChatEvent, checkbox: ManagedCheckbox,
@@ -36,15 +55,15 @@ async def check_changed(event: ChatEvent, checkbox: ManagedCheckbox,
 
 async def choose_8_passlen(callback: CallbackQuery, button: Button,
                      manager: DialogManager):
-    await change_pass_len(8, manager)
+    await change_pass_len(length=8, manager=manager)
 
 async def choose_16_passlen(callback: CallbackQuery, button: Button,
                      manager: DialogManager):
-    await change_pass_len(16, manager)
+    await change_pass_len(length=16, manager=manager)
 
 async def choose_32_passlen(callback: CallbackQuery, button: Button,
                      manager: DialogManager):
-    await change_pass_len(32, manager)
+    await change_pass_len(length=32, manager=manager)
 
 async def choose_64_passlen(callback: CallbackQuery, button: Button,
                      manager: DialogManager):
@@ -52,7 +71,7 @@ async def choose_64_passlen(callback: CallbackQuery, button: Button,
 
 async def change_pass_len(length: int, manager: DialogManager):
     ctx = manager.current_context()
-    ctx.dialog_data.update(password_length= length)
+    ctx.dialog_data.update(password_length=length)
     await manager.switch_to(PasswordDialog.pass_gen_menu)
 
 

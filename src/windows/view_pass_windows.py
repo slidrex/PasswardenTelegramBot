@@ -36,6 +36,11 @@ def get_pass_info_window():
 Name: {pass_id}
 Login:
 Password: 
+
+Entropy: ... bits
+Leak Status: ...
+
+Status: ...
 '''
         ),
         Button(Const("⚙️ Изменить имя"), id="change_name"),

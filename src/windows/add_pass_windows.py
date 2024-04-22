@@ -13,6 +13,7 @@ from windows_services.add_pass_callbacks import (
     on_pass_name_edited, 
     on_pass_name_enterred,
     pass_get_data,
+    get_password_security_report,
     check_changed, choose_16_passlen, choose_32_passlen, choose_64_passlen, choose_8_passlen
 )
 
@@ -23,9 +24,14 @@ def get_pass_data_confirm_window():
         Format('''
 Your enterred data:
                
-Name: {dialog_data[entered_pass_name]}
-Login: {dialog_data[entered_pass_login]}
-Password: {dialog_data[entered_pass_password]}
+Name: `{dialog_data[entered_pass_name]}`
+Login: `{dialog_data[entered_pass_login]}`
+Password: `{dialog_data[entered_pass_password]}`
+
+Entropy: {entropy} bits
+Leak Status: {leak}
+
+Status: {leak_status}
                
 Is it correct?
 '''
@@ -35,7 +41,9 @@ Is it correct?
     SwitchTo(Const("⚙️ Изменить имя"), id="pass_confirmation_change_name", state=PasswordDialog.edit_name),
     SwitchTo(Const("⚙️ Изменить логин"), id="pass_confirmation_change_login", state=PasswordDialog.edit_login),
     SwitchTo(Const("⚙️ Изменить пароль"), id="pass_confirmation_change_pass", state=PasswordDialog.ask_pass_gen_way),
-    state=PasswordDialog.confirm_pass_data
+    state=PasswordDialog.confirm_pass_data,
+    getter=get_password_security_report,
+    parse_mode="MarkdownV2"
     )
 def edit_name_window():
     return Window(
@@ -94,15 +102,16 @@ def get_change_pass_len_window():
 
 def input_pass_gen_window():
     return Window(
-        Format('{pwd}'),
+        Format('''`{pwd}`'''),
         SwitchTo(Const("Взять пароль"), id="take_pass", state=PasswordDialog.confirm_pass_data),
         Row(
             Checkbox(default=False, on_state_changed=check_changed, checked_text=Const("Символы ✅"), unchecked_text=Const("Символы ❌"), id="include_symbols"),
                     SwitchTo(Const("Изменить длину"), id="change_len", state=PasswordDialog.choose_passlen_win),
         ),
         
-        Button(Const("Сгенерировать новый"), id="gen_new"),
+        SwitchTo(Const("Сгенерировать новый"), id="genn_new", state=PasswordDialog.pass_gen_menu),
         state=PasswordDialog.pass_gen_menu,
+        parse_mode="MarkdownV2",
         getter=pass_get_data
     )
 def input_pass_name_window():
