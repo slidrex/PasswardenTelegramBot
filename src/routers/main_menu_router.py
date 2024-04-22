@@ -18,6 +18,7 @@ from middleware.auth_middleware import rt as auth_rt
 from dialog_states.pass_add_dialog_state import PasswordDialog
 from dialog_states.view_pass_state import ViewPassStates
 from routers.admin_panel_router import rt as admin_router
+from core.repositories.user_data_repository import UserDataRepository, AddUser
 
 from aiogram_dialog import (
     DialogManager, StartMode
@@ -44,6 +45,8 @@ rt.include_router(admin_router)
 
 @rt.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
+    user = AddUser(user_id=message.from_user.id)
+    await UserDataRepository.add_user(data=user)
     
     await message.answer(text= about.MESSAGE, reply_markup=get_main_markup())
 

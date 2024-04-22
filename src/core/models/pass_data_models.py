@@ -1,8 +1,9 @@
 from pydantic import BaseModel
 
 class AddPassword(BaseModel):
+    user_id: int
     name: str
     login: str
     password: str
 class DeletePassword(BaseModel):
-    id: int
+    user_id: int

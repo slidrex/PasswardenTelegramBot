@@ -1,24 +1,11 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from os import getenv
 
 
-class Settings(BaseSettings):
-    DB_HOST: str
-    DB_PORT: int
-    DB_USER: str
-    DB_PASS: str
-    DB_NAME: str
 
-    @property
-    def DATABASE_URL_asyncpg(self):
-        # postgresql+asyncpg://postgres:postgres@localhost:5432/sa
-        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+DB_USER: str = getenv("PG_USER")
+DB_PASS: str = getenv("PG_PASS")
+DB_HOST: str = getenv("PG_HOST")
+DB_PORT: int = getenv("PG_PORT")
+DB_NAME: str = getenv("PG_NAME")
 
-    @property
-    def DATABASE_URL_psycopg(self):
-        # DSN
-        # postgresql+psycopg://postgres:postgres@localhost:5432/sa
-        return f"postgresql+psycopg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
-    
-    model_config = SettingsConfigDict(env_file=".env")
-
-settings = Settings()
+DATABASE_URL_asyncpg = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"

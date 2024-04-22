@@ -8,12 +8,25 @@ from typing import Any
 from dialog_states.pass_add_dialog_state import PasswordDialog
 from core.services.pass_generate_service import generate_pass
 from core.services.pass_security_check_service import get_security_report
+from core.repositories.password_repository import PasswordRepository, AddPassword
+from core.repositories.user_data_repository import UserDataRepository, GetUser
+
 
 def get_pass(include_symbols: bool, length: int) -> str:
     return generate_pass(length, include_symbols)
 
+async def save_pass_click(callback: CallbackQuery, button: Button,
+                     manager: DialogManager):
+    ctx = manager.current_context()
 
+    user_id = ctx.dialog_data.get("user_id")
+    pass_name = ctx.dialog_data.get("entered_pass_name")
+    pass_login = ctx.dialog_data.get("entered_pass_login")
+    pass_pass = ctx.dialog_data.get("entered_pass_password")
 
+    user = await UserDataRepository.get_user(GetUser(user_id=user_id))
+
+    await PasswordRepository.add_pass(data=AddPassword(user_id=user.id, name=pass_name, login=pass_login, password=pass_pass))
 
 async def pass_get_data(dialog_manager: DialogManager,  **kwargs):
     ctx = dialog_manager.current_context()
@@ -111,6 +124,7 @@ async def on_pass_login_edited(message: Message, widget: Any, manager: DialogMan
 ######
 async def on_pass_login_enterred(message: Message, widget: Any, manager: DialogManager, data: str):
     ctx = manager.current_context()
+    ctx.dialog_data.update(user_id=message.from_user.id)
     ctx.dialog_data.update(entered_pass_login= data)
     await manager.switch_to(PasswordDialog.ask_pass_gen_way)
 

@@ -13,6 +13,7 @@ from windows_services.add_pass_callbacks import (
     on_pass_name_edited, 
     on_pass_name_enterred,
     pass_get_data,
+    save_pass_click,
     get_password_security_report,
     check_changed, choose_16_passlen, choose_32_passlen, choose_64_passlen, choose_8_passlen
 )
@@ -36,7 +37,7 @@ Status: {leak_status}
 Is it correct?
 '''
     ),
-    Next(Const("Продолжить ✅"), id="pass_confirmation_continue"),
+    Next(Const("Продолжить ✅"), id="pass_confirmation_continue", on_click=save_pass_click),
     Cancel(Const("<-- Закрыть -->"), id="pass_confirmation_btn"),
     SwitchTo(Const("⚙️ Изменить имя"), id="pass_confirmation_change_name", state=PasswordDialog.edit_name),
     SwitchTo(Const("⚙️ Изменить логин"), id="pass_confirmation_change_login", state=PasswordDialog.edit_login),

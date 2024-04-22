@@ -12,6 +12,7 @@ async def get_passwords(dialog_manager: DialogManager, **middleware_data):
         ]
     }
     return data
+
 async def get_pass_info(dialog_manager: DialogManager, **middleware_data):
     #session = middleware_data.get('session')
     context = dialog_manager.current_context()

@@ -10,6 +10,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram_dialog import setup_dialogs
 from logging_master.logging_manager import init_logging_bot
 from aiogram import flags
+from core.database.entities import create_tables
 
 load_dotenv()
 
@@ -26,8 +27,7 @@ async def main() -> None:
    # dp.message.middleware(AuthorizationMiddleware())
     
     setup_dialogs(dp)
-    
-
+    await create_tables()
     bot = Bot(
             token=TOKEN,
             default=DefaultBotProperties(parse_mode=ParseMode.HTML)
