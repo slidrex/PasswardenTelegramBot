@@ -1,5 +1,5 @@
 # PasswardenTelegramBot
- Official passwarden telegram bot client
+ Official Passwarden Telegram Bot Source
 
 Passwarden - Telegram Password Manager
 
