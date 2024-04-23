@@ -19,6 +19,9 @@ from dialog_states.pass_add_dialog_state import PasswordDialog
 from dialog_states.view_pass_state import ViewPassStates
 from routers.admin_panel_router import rt as admin_router
 from core.repositories.user_data_repository import UserDataRepository, AddUser
+from aiogram_dialog import Dialog
+from windows.main_menu_window import get_info_window 
+from dialog_states.main_menu_states import MenuState
 
 from aiogram_dialog import (
     DialogManager, StartMode
@@ -26,11 +29,8 @@ from aiogram_dialog import (
 
 
 
-SOURCE_CODE_BOT_URI = "https://github.com/slidrex/passwarden"
-
 
 from windows.main_menu_window import (
-    get_main_markup,
     ButtonText
 )
 
@@ -42,25 +42,24 @@ rt.include_router(settings_rt)
 rt.include_router(add_pass_router)
 rt.include_router(auth_rt)
 rt.include_router(admin_router)
+rt.include_router(Dialog(get_info_window()))
 
 @rt.message(CommandStart())
-async def command_start_handler(message: Message) -> None:
+async def command_start_handler(message: Message, dialog_manager: DialogManager) -> None:
     user = AddUser(user_id=message.from_user.id)
     await UserDataRepository.add_user(data=user)
     
-    await message.answer(text= about.MESSAGE, reply_markup=get_main_markup())
+    await dialog_manager.start(MenuState.INFO)
 
 @rt.message(F.text == ButtonText.INFO)
-async def about_handler(message: Message) -> None:
-
-    builder = InlineKeyboardBuilder()
-    builder.button(text="Github (Bot)", url=SOURCE_CODE_BOT_URI)
+async def about_handler(message: Message, dialog_manager: DialogManager) -> None:
     
-    await message.answer(text= about.MESSAGE, reply_markup=builder.as_markup())
+    await dialog_manager.start(MenuState.INFO)
 
 @rt.message(F.text == ButtonText.CREATE_PASS)
-@flags.authorization()
 async def create_pass_handler(message: Message, state: FSMContext, dialog_manager: DialogManager) -> None:
+    
+    
     await dialog_manager.start(PasswordDialog.ask_pass_name, mode=StartMode.RESET_STACK,
                                data={"password_length":16,
                                      "include_symbols": False})
@@ -68,11 +67,14 @@ async def create_pass_handler(message: Message, state: FSMContext, dialog_manage
 
 @rt.message(F.text == ButtonText.VIEW_PASS)
 async def view_pass_handler(message: Message, state: FSMContext, dialog_manager: DialogManager) -> None:
-    await dialog_manager.start(ViewPassStates.select_pass, mode=StartMode.RESET_STACK)
+    
+    
+    await dialog_manager.start(ViewPassStates.select_pass, data={"user_id": message.from_user.id}, mode=StartMode.RESET_STACK)
+
 
 
 @rt.message(F.text == ButtonText.SETTINGS)
 async def settings_handler(message: Message, state: FSMContext, dialog_manager: DialogManager) -> None:
-
+    
     await dialog_manager.start(SettingsState.SEETINGS_DIALOG)
 

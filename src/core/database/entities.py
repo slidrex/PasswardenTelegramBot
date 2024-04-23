@@ -32,7 +32,7 @@ class User(Base):
     user_id: Mapped[int] = mapped_column(unique=True)
 
     id:Mapped[int] = mapped_column(Integer, primary_key=True)
-    passwords = relationship("Password", back_populates="user")
+    passwords:Mapped[list["Password"]] = relationship("Password", back_populates="user", lazy="selectin", cascade="all, delete-orphan")
 
 
 class Password(Base):

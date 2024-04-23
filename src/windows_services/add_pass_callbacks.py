@@ -121,6 +121,9 @@ async def on_pass_login_edited(message: Message, widget: Any, manager: DialogMan
     ctx = manager.current_context()
     ctx.dialog_data.update(entered_pass_login=data)
     await manager.switch_to(PasswordDialog.confirm_pass_data)
+async def on_pass_manual_password_enterred(message: Message, widget: Any, manager: DialogManager, data: str):
+    manager.dialog_data.update(entered_pass_password= data)
+    await manager.switch_to(PasswordDialog.confirm_pass_data)
 ######
 async def on_pass_login_enterred(message: Message, widget: Any, manager: DialogManager, data: str):
     ctx = manager.current_context()
@@ -128,10 +131,8 @@ async def on_pass_login_enterred(message: Message, widget: Any, manager: DialogM
     ctx.dialog_data.update(entered_pass_login= data)
     await manager.switch_to(PasswordDialog.ask_pass_gen_way)
 
-async def on_pass_manual_password_enterred(message: Message, widget: Any, manager: DialogManager, data: str):
-    manager.dialog_data.update(entered_pass_password= data)
-    await manager.switch_to(PasswordDialog.confirm_pass_data)
 
 async def on_pass_way_enterred(message: Message, widget: Any, manager: DialogManager, data: str):
     await message.answer(data)
     await manager.switch_to(PasswordDialog.ask_pass_login)
+
