@@ -21,13 +21,14 @@ from middleware.auth_middleware import AuthorizationMiddleware
 async def main() -> None:
     dp = Dispatcher()
     dp.include_router(main_router)
-    
+
+
     #dp.callback_query.middleware(AuthorizationMiddleware())
     
-   # dp.message.middleware(AuthorizationMiddleware())
+    # dp.message.middleware(AuthorizationMiddleware())
     
     setup_dialogs(dp)
-    await create_tables()
+    
     bot = Bot(
             token=TOKEN,
             default=DefaultBotProperties(parse_mode=ParseMode.HTML)

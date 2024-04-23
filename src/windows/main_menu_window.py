@@ -1,5 +1,6 @@
 from aiogram.types.reply_keyboard_markup import ReplyKeyboardMarkup
 from aiogram.types.keyboard_button import KeyboardButton
+from aiogram_dialog.widgets.kbd import Keyboard
 from aiogram_dialog.widgets.kbd import Url
 from aiogram_dialog.widgets.text import Const
 from aiogram_dialog import Window
@@ -12,7 +13,6 @@ def get_info_window():
     return Window(
         Const(MESSAGE),
         Url(text=Const("Github (Bot)"), url=Const(SOURCE_CODE_BOT_URI)),
-        
         state=MenuState.INFO
     )
 

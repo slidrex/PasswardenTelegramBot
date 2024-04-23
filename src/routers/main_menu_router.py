@@ -22,6 +22,7 @@ from core.repositories.user_data_repository import UserDataRepository, AddUser
 from aiogram_dialog import Dialog
 from windows.main_menu_window import get_info_window 
 from dialog_states.main_menu_states import MenuState
+from windows.main_menu_window import get_main_markup
 
 from aiogram_dialog import (
     DialogManager, StartMode
@@ -47,6 +48,8 @@ rt.include_router(Dialog(get_info_window()))
 @rt.message(CommandStart())
 async def command_start_handler(message: Message, dialog_manager: DialogManager) -> None:
     user = AddUser(user_id=message.from_user.id)
+    
+    await message.answer(text="Hello", reply_markup=get_main_markup())
     await UserDataRepository.add_user(data=user)
     
     await dialog_manager.start(MenuState.INFO)
